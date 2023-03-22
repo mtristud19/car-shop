@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -7,7 +8,15 @@ from rest_framework.authtoken.models import Token
 from car.permissions import IsOwnerOrReadOnly
 from .car_serializers import CarSerializer
 from .models import Car
+
+import requests
+
 # Create your views here.
+
+def index(request):
+    r = requests.get('https://httpbin.org/status/418')
+    print(r.text)
+    return HttpResponse('<pre>' + r.text + '</pre>')
 
 class LoginView(APIView):
 
