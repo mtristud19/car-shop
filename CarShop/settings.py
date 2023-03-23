@@ -25,8 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
-# SECRET_KEY = 'django-insecure-1((u3*ooz@lky%sud=j-fccmg)un)j5p4dqv5r0l-*u^+xau$2'
+# SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = 'django-insecure-1((u3*ooz@lky%sud=j-fccmg)un)j5p4dqv5r0l-*u^+xau$2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -36,7 +36,7 @@ ALLOWED_HOSTS = ["*"]
     # ALLOWED_HOSTS = []
 
 # if not IS_HEROKU:
-DEBUG = False
+DEBUG = True
 
 # Application definition
 
