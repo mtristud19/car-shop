@@ -3,9 +3,7 @@ from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
-from rest_framework.authtoken.models import Token
 
-from car.permissions import IsOwnerOrReadOnly
 from .car_serializers import CarSerializer
 from .models import Car
 
@@ -18,17 +16,9 @@ def index(request):
     print(r.text)
     return HttpResponse('<pre>' + r.text + '</pre>')
 
-class LoginView(APIView):
-
-    def get(self, request:Request):
-        content={
-            "user": str(request.user),
-            "auth": str(request.auth)
-        }
-        return Response(data=content, status=status.HTTP_200_OK)
 
 class CarListAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     # 1. List all
 
     def get(self, request, *args, **kwargs):

@@ -17,6 +17,12 @@ from django.contrib import admin
 from django.urls import include, path
 from car import views
 
+from django.contrib.auth.models import User, Group
+from rest_framework.authtoken.models import Token
+# admin.site.unregister(Token)
+# admin.site.unregister(User)
+# admin.site.unregister(Group)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('car/', include('car.urls')),
