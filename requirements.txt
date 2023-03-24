@@ -12,4 +12,5 @@ whitenoise>=6.0,<7.0
 psycopg2>=2.0,<3.0
 django_heroku==0.3.1
 djangorestframework==3.14.0
+djangorestframework-simplejwt==5.2.2
 requests
