@@ -1,10 +1,20 @@
 from django.http import HttpResponse
+
+from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
+from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework import generics
 
 from .car_serializers import CarSerializer
+from .user_serializers import MyTokenObtainPairSerializer
 from .models import Car
 
 import requests
@@ -16,6 +26,48 @@ def index(request):
     print(r.text)
     return HttpResponse('<pre>' + r.text + '</pre>')
 
+class MyObtainTokenPairView(TokenObtainPairView): #  overide auth token jwt
+    permission_classes = (AllowAny,) # cho phep classes
+    serializer_class = MyTokenObtainPairSerializer
+
+class RegisterSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(
+            required=True,
+            validators=[UniqueValidator(queryset=User.objects.all())]
+            )
+
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'password', 'password2', 'email', 'first_name', 'last_name')
+        extra_kwargs = {
+            'first_name': {'required': True},
+            'last_name': {'required': True}
+        }
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
+        return attrs
+
+    def create(self, validated_data):
+        user = User.objects.create(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name']
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+
+        return user
+
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = RegisterSerializer
 
 class CarListAPIView(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
