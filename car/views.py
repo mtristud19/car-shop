@@ -69,6 +69,7 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
+# car
 class CarListAPIView(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     # 1. List all
@@ -90,6 +91,7 @@ class CarListAPIView(APIView):
             'name': request.data.get('name'),
             'price': request.data.get('price'),
             'content': request.data.get('content'),
+            'brand': request.data.get('brand'),
             'user': request.user.id
         }
         serializer = CarSerializer(data=data)
@@ -142,6 +144,7 @@ class CarDetailAPIView(APIView):
             'name': request.data.get('name'),
             'price': request.data.get('price'),
             'content': request.data.get('content'),
+            'brand': request.data.get('brand'),
             'user': request.user.id
 
         }
