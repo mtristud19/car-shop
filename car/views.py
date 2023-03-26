@@ -12,6 +12,9 @@ from rest_framework.validators import UniqueValidator
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics
+from rest_framework.generics import ListAPIView
+
+from  django_filters.rest_framework import DjangoFilterBackend
 
 from .car_serializers import CarSerializer
 from .user_serializers import MyTokenObtainPairSerializer
@@ -25,6 +28,12 @@ def index(request):
     r = requests.get('https://httpbin.org/status/418')
     print(r.text)
     return HttpResponse('<pre>' + r.text + '</pre>')
+
+class CarList(ListAPIView):
+    queryset=Car.objects.all()
+    serializer_class = MyTokenObtainPairSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields =['name','price']
 
 class MyObtainTokenPairView(TokenObtainPairView): #  overide auth token jwt
     permission_classes = (AllowAny,) # cho phep classes
